@@ -1,0 +1,12 @@
+[Unit]
+Description=Configure the isolated nested Proxmox ARM64 lab
+Wants=network-online.target
+After=network-online.target pve-cluster.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/pve-lab-bootstrap
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

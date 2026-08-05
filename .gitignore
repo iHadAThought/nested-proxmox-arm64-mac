@@ -1,0 +1,10 @@
+artifacts/*
+!artifacts/.gitkeep
+.cache/
+.env
+*.log
+*.qcow2
+*.raw
+*.img
+*.iso
+secrets/

@@ -1,0 +1,51 @@
+#!/bin/bash
+
+set -Eeuo pipefail
+
+readonly NODE_NAME="pve-arm64-lab"
+readonly BOOTSTRAP_MARKER="/var/lib/pve-lab-bootstrap.complete"
+
+# Clear any previous ready marker so consumers can wait for this boot.
+rm -f "$BOOTSTRAP_MARKER"
+
+if ! grep -Eq "[[:space:]]${NODE_NAME}([[:space:]]|$)" /etc/hosts; then
+  printf '127.0.1.1 %s.pve-lab.internal %s\n' \
+    "$NODE_NAME" "$NODE_NAME" >>/etc/hosts 2>/dev/null || true
+fi
+
+hostname "$NODE_NAME"
+
+# Apple Containerization protects /proc/sys by default. This VM is dedicated
+# to the lab and has an independent kernel, so remount only its sysctl subtree.
+mount -o remount,rw /proc/sys
+sysctl -q -w net.ipv4.ip_forward=1
+sysctl -q -w net.ipv6.conf.all.forwarding=1
+
+if [[ ! -c /dev/kvm ]]; then
+  echo "/dev/kvm is unavailable; nested virtualization was not enabled" >&2
+  exit 1
+fi
+
+chown root:kvm /dev/kvm
+chmod 0660 /dev/kvm
+install -d -m 0755 /var/lib/rrdcached/db
+
+if ! ip link show vmbr0 >/dev/null 2>&1; then
+  ifup vmbr0
+fi
+
+nft -f /etc/nftables.conf
+systemctl restart dnsmasq
+
+for service in pve-cluster pvedaemon pveproxy pvestatd; do
+  systemctl enable "$service" >/dev/null
+  systemctl restart "$service"
+done
+
+if [[ ! -s /etc/pve/local/pveproxy-ssl.pem ]]; then
+  pvecm updatecerts --force
+  systemctl restart pveproxy
+fi
+
+install -d -m 0700 /root/.ssh
+touch "$BOOTSTRAP_MARKER"

@@ -1,0 +1,13 @@
+auto lo
+iface lo inet loopback
+
+# Apple Containerization configures the external interface before systemd starts.
+# Do not let ifupdown replace its address or default route.
+
+auto vmbr0
+iface vmbr0 inet static
+    address 10.44.0.1/24
+    bridge-ports none
+    bridge-stp off
+    bridge-fd 0
+    bridge-vlan-aware no
