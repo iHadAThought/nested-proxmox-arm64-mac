@@ -49,15 +49,33 @@ Harness: `scripts/long-term-stability.sh`
 | `io` | `IO_MIB=128` | PASS | `artifacts/long-term-20260805-150848.log` |
 | `durability` | `DURABILITY_MIB=64` | PASS (SHA-256 matched after restart) | `artifacts/long-term-20260805-150854.log` |
 
-### Campaign in flight / next
-
-Started 2026-08-05 (local):
+### 2026-08-05 — full long-horizon campaign (interrupted)
 
 ```bash
 SKIP_SLEEP_WAKE=1 caffeinate -dims ./scripts/long-term-stability.sh all
 ```
 
-This runs `io` → `durability` → `concurrent` → `reboot` → skipped sleep-wake →
-24h `soak`. Update this section when the process exits; sleep-wake still needs
-a separate interactive run.
+The local run did not complete before host teardown preparation. Preserved
+results from `artifacts/long-term-20260805-151011.log`:
+
+| Suite | Result | Detail |
+|---|---|---|
+| `io` | PASS | 1024 MiB write/read; `verify-lab` remained clean |
+| `durability` | PASS | 512 MiB random blob SHA-256 matched after lab restart |
+| `concurrent` | FAIL | both clones started, but only one of two obtained DHCP/ping |
+| `reboot` | PARTIAL PASS | iterations 1–4 recovered before the log ended |
+| `sleep-wake` | NOT RUN | interactive test still required |
+| `soak` | NOT RUN | 24-hour phase was never reached |
+
+This makes concurrent guest networking the highest-priority unresolved issue.
+Do not describe the lab as production-ready.
+
+### Next campaign
+
+1. Rebuild the lab after the Mac wipe using `README.md`.
+2. Reproduce `./scripts/long-term-stability.sh concurrent`.
+3. Check cloned VM MAC addresses, cloud-init instance IDs, dnsmasq leases, and
+   bridge traffic for VM 9001 before changing network design.
+4. Re-run `reboot`, then the interactive `sleep-wake` suite.
+5. Only after those pass, run the 24-hour `soak`.
 

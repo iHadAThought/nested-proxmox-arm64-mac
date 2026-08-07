@@ -182,7 +182,11 @@ artifacts/                    local logs/kernels (gitignored)
 | [README.md](README.md) | Overview, setup, current state |
 | [docs/TESTING.md](docs/TESTING.md) | How to run short- and long-horizon suites |
 | [docs/RESULTS.md](docs/RESULTS.md) | Dated pass/fail evidence |
+| [docs/HANDOFF.md](docs/HANDOFF.md) | Post-wipe rebuild context and next-agent priorities |
 | [docs/bookstack-proxmox-arm64.md](docs/bookstack-proxmox-arm64.md) | BookStack-ready ops runbook |
+
+Live BookStack book:
+[Nested Proxmox ARM64 on Mac](https://bookstack.ghostnetwork.app/books/nested-proxmox-arm64-on-mac).
 
 ## Contributing results
 
