@@ -10,14 +10,17 @@ not a normal or production Proxmox server.
 
 ## Canonical locations
 
-- GitHub: <https://github.com/iHadAThought/nested-proxmox-arm64-mac>
-- Forgejo: <https://git.ghostnetwork.app/Brendan/nested-proxmox-arm64-mac>
+- Forgejo (authoritative after wipe):
+  <https://git.ghostnetwork.app/Brendan/nested-proxmox-arm64-mac>
+- GitHub (historical mirror; handoff commit not pushed):
+  <https://github.com/iHadAThought/nested-proxmox-arm64-mac>
 - BookStack: <https://bookstack.ghostnetwork.app/books/nested-proxmox-arm64-on-mac>
 - Repository folder before wipe: `/Users/brendan/Projects/containers`
 - Default branch: `master`
 
-After the wipe, prefer Forgejo or GitHub as the source. Verify both remotes
-point to the same commit before making new changes.
+After the wipe, clone Forgejo. GitHub remains one handoff commit behind because
+the final request explicitly asked to update Forgejo, not GitHub. Synchronize
+GitHub only after the user explicitly authorizes another GitHub push.
 
 ## Important technical decisions
 
