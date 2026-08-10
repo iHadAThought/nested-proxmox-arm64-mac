@@ -7,8 +7,8 @@ ARM64 guests on Apple Silicon—not to replace a bare-metal Proxmox host.
 > **Status:** experimental / non-production.
 > Short-horizon stability is green. **Long-horizon testing is ongoing.**
 > See [docs/RESULTS.md](docs/RESULTS.md) and [docs/TESTING.md](docs/TESTING.md).
-> The Forgejo repository is the authoritative post-wipe source; the GitHub
-> mirror does not yet contain the final handoff commit.
+> Forgejo remains the day-to-day source of truth. The GitHub mirror is synced
+> through tag `v0.1.0` (pre-wipe handoff).
 
 ## Why this exists
 
